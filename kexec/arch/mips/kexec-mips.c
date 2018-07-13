@@ -79,6 +79,8 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
 
 struct file_type file_type[] = {
 	{"elf-mips", elf_mips_probe, elf_mips_load, elf_mips_usage},
+	{"uimage-mips", uImage_mips_probe, uImage_mips_load, elf_mips_usage},
+	{"binary-mips", binary_mips_probe, binary_mips_load, elf_mips_usage},
 };
 int file_types = sizeof(file_type) / sizeof(file_type[0]);
 
@@ -173,4 +175,3 @@ unsigned long add_buffer(struct kexec_info *info, const void *buf,
 	return add_buffer_phys_virt(info, buf, bufsz, memsz, buf_align,
 				    buf_min, buf_max, buf_end, 1);
 }
-
