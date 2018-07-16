@@ -24,6 +24,7 @@ KEXEC_SRCS_base += kexec/crashdump-xen.c
 KEXEC_SRCS_base += kexec/phys_arch.c
 KEXEC_SRCS_base += kexec/kernel_version.c
 KEXEC_SRCS_base += kexec/lzma.c
+KEXEC_SRCS_base += kexec/lzma-mem.c
 KEXEC_SRCS_base += kexec/zlib.c
 KEXEC_SRCS_base += kexec/kexec-xen.c
 KEXEC_SRCS_base += kexec/symbols.c
