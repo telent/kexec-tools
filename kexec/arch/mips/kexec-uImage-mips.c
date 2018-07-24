@@ -8,6 +8,7 @@
 #include <kexec-uImage.h>
 #include "../../kexec.h"
 #include "kexec-mips.h"
+#include "../../fs2dt.h"
 #ifdef HAVE_LIBLZMA
 #include "../../kexec-lzma.h"
 #endif
@@ -48,11 +49,33 @@ int binary_mips_probe(const char *buf, off_t len)
         return 0;                     /* yes, of course 0 is "success" */
 }
 
+#define COMMAND_LINE_SIZE 512
+static char cmdline_buf[COMMAND_LINE_SIZE] = "";
+extern struct arch_options_t arch_options;
+
 int binary_mips_load(int argc, char **argv, const char *buf, off_t len,
 	struct kexec_info *info)
 {
-        dbgprintf("binary: %p %lld %p\n", buf, len, info);
-        add_segment(info, buf, len, 0, len);
-        info->entry = 0;
-        return 0;
+	off_t dtb_length;
+	char *dtb_buf;
+	unsigned long long kernel_addr = 0;
+	unsigned long pagesize = getpagesize();
+
+	dbgprintf("binary: %p %lld %p\n", buf, len, info);
+	add_segment(info, buf, len, kernel_addr, len);
+	info->entry = 0;
+
+	if (arch_options.command_line) {
+		strlcpy(cmdline_buf, arch_options.command_line, COMMAND_LINE_SIZE);
+
+		dbgprintf("command oine %s\n", cmdline_buf);
+		create_flatten_tree(&dtb_buf, &dtb_length, cmdline_buf);
+
+		add_buffer(info, dtb_buf, dtb_length, dtb_length, 0,
+			   _ALIGN_UP(kernel_addr + len, pagesize),
+			   0x0fffffff, 1);
+
+	}
+
+	return 0;
 }
