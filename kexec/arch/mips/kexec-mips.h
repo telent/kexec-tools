@@ -17,6 +17,15 @@ int elf_mips_load(int argc, char **argv, const char *buf, off_t len,
 	struct kexec_info *info);
 void elf_mips_usage(void);
 
+int uImage_mips_probe(const char *buf, off_t len);
+int uImage_mips_load(int argc, char **argv, const char *buf, off_t len,
+	struct kexec_info *info);
+
+int binary_mips_probe(const char *buf, off_t len);
+int binary_mips_load(int argc, char **argv, const char *buf, off_t len,
+	struct kexec_info *info);
+
+
 struct arch_options_t {
 	char *command_line;
 	char *dtb_file;
