@@ -11,6 +11,9 @@
 #include "../../kexec.h"
 #include "kexec-mips.h"
 #include "../../fs2dt.h"
+#ifdef HAVE_LIBLZMA
+#include "../../kexec-lzma.h"
+#endif
 
 /* uImage seems to be a fairly general-purpose container, and what you
  * should customarily expect to find inside one varies between
@@ -33,6 +36,12 @@ int uImage_mips_load(int argc, char **argv, const char *buf, off_t len,
         len -= sizeof(struct image_header);
 
         switch(header->ih_comp) {
+#ifdef HAVE_LIBLZMA
+        case IH_COMP_LZMA:
+                dbgprintf("detected uimage lzma compression\n");
+                buf = lzma_decompress_mem(buf, len, &len);
+                /* fallthrough */
+#endif
         case IH_COMP_NONE:
                 dbgprintf("decompressed uimage: %p %lld %p\n", buf, len, info);
                 return binary_mips_load(argc, argv, buf, len, info);

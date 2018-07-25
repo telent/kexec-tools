@@ -73,6 +73,9 @@ int uImage_probe(const char *buf, off_t len, unsigned int arch)
 #ifdef HAVE_LIBZ
 	case IH_COMP_GZIP:
 #endif
+#ifdef HAVE_LIBLZMA
+	case IH_COMP_LZMA:
+#endif
 		break;
 	default:
 		printf("uImage uses unsupported compression method\n");
